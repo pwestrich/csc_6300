@@ -1,0 +1,37 @@
+
+<h1 style="text-align: center;">Checkout</h1>
+<table id="products_table" border="border" width="640">
+	<tbody>
+		<tr><th>Product ID</th><th>Product Name</th><th>Description</th><th>Price</th><th>In Cart</th><th>Total</th></tr>
+		<tr>
+			<td>TEST-001</td>
+			<td>Test Object</td>
+			<td>Just a test, please ignore.</td>
+			<td>$9001.00</td>
+			<td>0</td>
+		<td>0</td>
+		</tr>
+	</tbody>
+</table>
+<button type="button" action="complete">Complete Transaction</button>
+<script id="complete" type="text/javascript">
+	//get the table
+	var tableRows = document.getElementById("products_table").rows;
+	var formData = new FormData();
+	formData.append("username", "something");
+
+	//pick out the quantity box from each row, excluding the header
+	for (var i = 0; i < tableRows.length; i++){
+		
+		var productID = tableRows[i].item(0);
+		var quantity = tableRows[i].item(4);
+
+		formData.append(productID, quantity);
+
+	}
+
+	var request = new XMLHttpRequest();
+
+	request.open("POST", "/confirm.html");
+	request.send(formData);
+</script>
