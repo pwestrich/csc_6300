@@ -1,0 +1,10 @@
+
+1. All you should have to do is run the SQL script ./sql/db_schema and move the 
+   contents of ./html into your web server's root directory.
+2. sendmail needs to be installed for sending email to work. That's what the PHP 
+   mail() function uses.
+3. Database parameters are in ./html/database.php. The SQL script creates the 
+   database and user to match what's currently in that file.
+   
+-Philip Westrich
+

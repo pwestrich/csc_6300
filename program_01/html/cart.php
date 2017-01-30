@@ -1,57 +1,6 @@
 <?php
 
-	require "database.php";
-	
-	if (!isset($_POST["user_id"]) || !isset($_POST["password"])){
-
-		echo "<<h1><strong>Error</strong></h1>";
-		echo "Please ";
-		echo '<a title="log in" href="/index.html">log in.</a>';
-		die();
-
-	}
-	
-	//attempt to authenticate (super insecure way)
-	$username = $_POST["user_id"];
-	$password = $_POST["password"];
-
-	$userResult = mysqli_query($db, "SELECT * FROM users WHERE username = '$username' AND password = '$password';");
-	
-	if ($userResult->num_rows != 1){
-
-		echo "<<h1><strong>Error</strong></h1>";
-		echo "Credentials incorrect. Please ";
-		echo '<a title="log in" href="/index.html">log in.</a>';
-		die();
-
-	}
-
-	$user = $userResult->fetch_assoc();
-	
-	//user is authenticated, use posted cart if there is one, or the cart in the database elsewise
-	$cart = null;
-	
-	if (isset($_POST["cart"]) && $cart = json_decode($_POST["cart"], true)){
-	   
-	   //save cart
-	   $queryString = "UPDATE users SET current_cart='" . $_POST["cart"] ."' WHERE username='$username';";
-	   $cartSaveResult = mysqli_query($db, $queryString);
-	   
-	   if ($cartSaveResult == false){
-	   
-	      error_log("cart save failed: " . mysqli_error($db));
-	   
-	   }
-	
-	} else {
-	   
-	   //use already saved cart
-	   $cart = json_decode($user["current_cart"], true);
-	   error_log("fetched cart from database: $cart");
-   }
-   
-   //fetch products
-   $products = mysqli_query($db, "SELECT * FROM products;");
+	require "parse_cart.php";
    
 ?>
 
@@ -109,11 +58,11 @@ function sendCart(cart, page){
 	var form = document.createElement("form");
 	form.setAttribute("method", "post");
 	form.setAttribute("action", page);
-	
-	addHidden(form, "user_id", "testuser");
-	addHidden(form, "password", "password");
-	addHidden(form, "cart", JSON.stringify(cart));
-	
+<?php //super secret credentials
+	echo "addHidden(form, 'user_id', '$username');";
+	echo "addHidden(form, 'password', '$password');";
+?>
+	addHidden(form, "cart", cart);
 	document.body.appendChild(form);
 	
    form.submit();
@@ -121,26 +70,9 @@ function sendCart(cart, page){
 }
 	
 function checkout(){
-
-	//get the table
-	var tableRows = document.getElementById("products_table").rows;
-	var cart = {};
-
-	//pick out the quantity box from each row, excluding the header
-	for (var i = 1; i < tableRows.length; i++){
-
-		var row = tableRows[i];
-		var cells = row.cells;
-		
-		var productID = cells[0].innerHTML;
-		var quantity = cells[4].innerHTML;
-
-		cart[productID] = quantity;
-
-	}
-	
-	sendCart(cart, "/checkout.php");
-
+<?php
+	echo "sendCart('$cart_json', '/checkout.php')";
+?>
 }
 
 function addToCart(){
@@ -170,7 +102,7 @@ function addToCart(){
 
 	}
 	
-	sendCart(cart, "/cart.php");
+	sendCart(JSON.stringify(cart), "/cart.php");
 
 }
 

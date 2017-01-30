@@ -6,11 +6,6 @@
 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';
-
--- -----------------------------------------------------
--- Schema mydb
--- -----------------------------------------------------
-
 -- -----------------------------------------------------
 -- Schema mydb
 -- -----------------------------------------------------
@@ -30,7 +25,6 @@ CREATE TABLE IF NOT EXISTS `mydb`.`users` (
   PRIMARY KEY (`username`))
 ENGINE = InnoDB;
 
-
 -- -----------------------------------------------------
 -- Table `mydb`.`products`
 -- -----------------------------------------------------
@@ -38,51 +32,8 @@ CREATE TABLE IF NOT EXISTS `mydb`.`products` (
   `product_id` VARCHAR(64) NOT NULL,
   `name` VARCHAR(64) NOT NULL,
   `price` DECIMAL(10,2) NOT NULL,
-  `description` VARCHAR(45) NOT NULL,
+  `description` TEXT NOT NULL,
   PRIMARY KEY (`product_id`))
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `mydb`.`sales`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`sales` (
-  `sale_id` BIGINT(20) NOT NULL AUTO_INCREMENT,
-  `username` VARCHAR(64) NOT NULL COMMENT 'Who bought it?',
-  `date` TIMESTAMP NULL DEFAULT NULL COMMENT 'When did they buy it?',
-  `amount` DECIMAL(10,2) NOT NULL COMMENT 'How much was it?',
-  PRIMARY KEY (`sale_id`),
-  INDEX `sales_users_idx` (`username` ASC),
-  CONSTRAINT `sales_users`
-    FOREIGN KEY (`username`)
-    REFERENCES `mydb`.`users` (`username`)
-    ON DELETE RESTRICT
-    ON UPDATE RESTRICT)
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `mydb`.`sale_items`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`sale_items` (
-  `sale_item_id` BIGINT(20) NOT NULL AUTO_INCREMENT,
-  `sale_id` BIGINT(20) NOT NULL COMMENT 'Which sale is this part of?',
-  `product_id` VARCHAR(64) NOT NULL COMMENT 'What item was sold?',
-  `quantity` BIGINT(20) NOT NULL COMMENT 'How many of them?',
-  `price` DECIMAL(10,2) NOT NULL COMMENT 'At what price?',
-  PRIMARY KEY (`sale_item_id`),
-  INDEX `sale_items_products_idx` (`product_id` ASC),
-  INDEX `sale_items_sales_idx` (`sale_id` ASC),
-  CONSTRAINT `sale_items_products`
-    FOREIGN KEY (`product_id`)
-    REFERENCES `mydb`.`products` (`product_id`)
-    ON DELETE RESTRICT
-    ON UPDATE RESTRICT,
-  CONSTRAINT `sale_items_sales`
-    FOREIGN KEY (`sale_id`)
-    REFERENCES `mydb`.`sales` (`sale_id`)
-    ON DELETE RESTRICT
-    ON UPDATE RESTRICT)
 ENGINE = InnoDB;
 
 CREATE USER 'web_user' IDENTIFIED BY 'web_user';
@@ -101,7 +52,6 @@ USE `mydb`;
 INSERT INTO `mydb`.`users` (`username`, `password`, `email`, `last_name`, `first_name`, `current_cart`) VALUES ('test', 'password', 'test@example.com', 'User', 'Test', NULL);
 
 COMMIT;
-
 
 -- -----------------------------------------------------
 -- Data for table `mydb`.`products`
