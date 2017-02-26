@@ -1,0 +1,6 @@
+
+
+<query xmlns="http://basex.org/rest">
+  <text><![CDATA[ %s ]]></text>
+</query>
+

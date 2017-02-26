@@ -1,7 +1,18 @@
 
 <?php
-
-
+	//paper types for the exist database
+	$EXIST_PAPER_TYPES = array(
+		"0"  => "Journal Article",
+		"1"  => "Book",
+		"3"  => "Conference Proceedings",
+		"5"  => "Collection",
+		"10" => "Tech Report",
+		"15" => "Unpublished",
+		"16" => "Miscellaneous",
+		"47" => "Conference Proceedings");
+	
+	//paper types for the basex database, will need to be fetched
+	$BASEX_PAPER_TYPES = array();
 
 ?>
 
@@ -21,7 +32,25 @@
     <tr>
       <td><input type="checkbox">Search by Type</input></td>
       <td><p align="right">Type:</p></td> 
-      <td><input type="text" name="paperType"/></td>
+      <td>
+        <select name="paperType">
+
+<?php
+	foreach ($EXIST_PAPER_TYPES as $key => $value){
+
+		echo "<option value='$key'>$value</option>";
+
+	}
+
+	foreach ($BASEX_PAPER_TYPES as $key => $value){
+
+		echo "<option value='$key'>$value</option>";
+
+	}
+
+?>
+        </select>
+      </td>
     </tr>
     <tr>
       <td><input type="checkbox">Search by Abstract</input></td>
@@ -29,9 +58,10 @@
       <td><input type="text" name="apstractContent"/></td>
     </tr>
   </table>
-	<p align="center"><input type="submit" value="Submit"></p>
+  <input type="submit" value="Submit">
 </form>
 
 <h2>Results</h2>
 <textarea name="message" rows="10" cols="65">
 </textarea>
+
