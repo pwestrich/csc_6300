@@ -53,7 +53,7 @@
     </tr>
     <tr>
       <td><p align="right">Abstract contains:</p></td> 
-      <td><input type="text" name="abstractContent"/><?php echo $abstract ?></td>
+      <td><input type="text" name="abstractContent" value='<?php echo "$abstract" ?>' /></td>
     </tr>
   </table>
   <input type="submit" value="Submit">
@@ -63,7 +63,7 @@
 <textarea name="message" rows="10" cols="65">
 <?php  
 	
-//	basex_print_results($basex_results);
+	basex_print_results($basex_results);
 	exist_print_results($exist_results);
 
 ?>
