@@ -1,21 +1,61 @@
 
-\documentclass[12pt]{article}
-\usepackage[top=1in, bottom=1in, left=1in, right=1in]{geometry}
-\usepackage{setspace}
+\documentclass[format=acmsmall, review=false, screen=true]{acmart}
 
-\title{Term Paper}
-\author{Philip Westrich}
-\date{April 25, 2017}
+\usepackage{booktabs} % For formal tables
 
+\usepackage[ruled]{algorithm2e} % For algorithms
+\renewcommand{\algorithmcfname}{ALGORITHM}
+\SetAlFnt{\small}
+\SetAlCapFnt{\small}
+\SetAlCapNameFnt{\small}
+\SetAlCapHSkip{0pt}
+\IncMargin{-\parindent}
+
+% Copyright
+\setcopyright{acmlicensed}
+
+% Document starts
 \begin{document}
+% Title portion. Note the short title for running heads 
+\title[Short Title]{The Long Title of my Paper}  
+\author{Philip M. Westrich}
+\affiliation{
+  \institution{Tennessee Technological University}
+  \streetaddress{1 William L. Jones Drive}
+  \city{Cookeville} \state{TN} \postcode{38501} \country{USA}
+}
+
+\begin{abstract}
+This is my abstract. It isn't very long. 
+\end{abstract}
 
 \maketitle
 
-\vspace{-0.3in}
-\noindent
-\rule{\linewidth}{0.4pt}
-\doublespacing
+\section{Introduction}
 
-This is my paper. It isn't very long.
+This is my introduction. It isn't very long either.
+
+\section{Section 1}
+
+Text goes here.
+
+\subsection{Subsection 1}
+
+Text goes here.
+
+\subsubsection{Sub-Subsection 1}
+
+Text goes here.
+
+\paragraph{Sub-Sub-Subsection 1}
+
+Text goes here.
+
+\section{Conclusions}
+
+My conclusion isn't very long either.
+
+\bibliographystyle{ACM-Reference-Format}
+\bibliography{bibliography}
 
 \end{document}
