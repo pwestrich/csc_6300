@@ -1,0 +1,12 @@
+
+For my term paper, I would like to write about the performance impacts of recent solid-state based storage (SSDs) on database performance. SSDs have much faster read and write times than traditional hard drives. Unfortunately, they still cost some order of magnitude more than hard drives for the same amount of storage space. There are also questions of reliability, as it is a newer technology. SSDs also tend to perform poorly when small to moderate writes are requested in random order (often in OLTP environments); databases will have to adapt.
+
+Papers:
+
+http://s1.downloadmienphi.net/file/downloadfile2/169/1398648.pdf
+
+https://pdfs.semanticscholar.org/2363/eb25371b4be662a3ac5c51a14297b0139412.pdf
+
+http://www.vldbarc.org/pvldb/vldb2010/papers/I06.pdf
+
+https://pdfs.semanticscholar.org/7019/d566d10fcdb836aa338c344de4f0ed2131b6.pdf
