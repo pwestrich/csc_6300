@@ -1,8 +1,27 @@
 
 1.	Background and Introduction
+	
+	a)	Overview of paper
+	b)	What are SSDs?
+	c)	How are they different from tradidtional HDDs?
+	d)	How does this impact traditional database systems?
+	e)	What solutions have been discussed?
 
-	a)	What are SSDs?
-	b)	How are they different from traditional HDDs?
-	c)	How do SSDs work?
+2.	Overview of SSDs
 
-2.	
+	a)	More in-depth explanation on how they typically function
+	b)	They're accessed differently than normal HDDs, but look the same to the OS
+	c)	List the differences between SSDs and HDDs in-depth
+
+3.	Effects on database systems
+
+	a)	What of the differences mentioned affect databases (both good and bad)?
+	b)	Specific use cases that can be benefitted and harmed from the use of SSDs
+
+4.	Current solutions to problems caused by SSDs
+
+	a)	What solutions have been discussed/proposed/implemented that take advantage of SSDs?
+
+4.	Conclusion
+
+	a)	Basically introdution again
