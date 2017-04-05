@@ -1,9 +1,8 @@
 
-#include <cstdint>
-#include <fstream>
 #include <iostream>
 
 #include "main.h"
+#include "hybrid_cache.h"
 
 //Prints the program's usage to the specified ostream.
 void usage(std::ostream &out, const char *name){
@@ -81,6 +80,18 @@ int main(const int argc, const char *argv[]){
 	//Arguments parsed, now proceed to do the work
 	std::cout << "Simulating hybrid cache..." << std::endl;
 
+	const SimulationResults results = simulateHybridCache(args);
+
+	const double hitRatio = results.cacheHits / static_cast<double>(results.cacheHits + results.cacheMisses);
+
+	std::cout << "Finished. Results: " 					<< std::endl;
+	std::cout << "Cache hits:                         " << results.cacheHits 				<< std::endl;
+	std::cout << "Cache misses:                       " << results.cacheMisses 				<< std::endl;
+	std::cout << "Hit ratio:                          " << hitRatio 						<< std::endl;
+	std::cout << "Replacement algorithm called:       " << results.replacementPolicyCalls 	<< std::endl;
+	std::cout << "Largest number of objects replaced: " << results.maxObjectsReplaced 		<< std::endl;
+	std::cout << "Lowest UV recorded:                 " << results.lowestUV 				<< std::endl;
+	std::cout << "Highest UV recorded:                " << results.highestUV 				<< std::endl;
 
 	return 0;
 
