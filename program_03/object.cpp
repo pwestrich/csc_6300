@@ -1,4 +1,5 @@
 
+#include <fstream>
 #include <string>
 
 #include "object.h"
@@ -30,16 +31,20 @@ Server string2server(const std::string &server){
 }
 
 //Reads a single line from the specified istream and makes an object from it
-FetchedObject readFromFile(std::ifstream &in){
+std::istream& operator >>(std::istream &in, FetchedObject &object){
 
-	std::string server, date, time, resource, size;
+	std::string server, date, time;
 
-	std::getline(in, server, ' ');
-   std::getline(in, date, ' ');
-   std::getline(in, time, ' ');
-   std::getline(in, resource, ' ');
-   std::getline(in, size, '\n');
+	in >> server >> date >> time >> object.resource >> object.size;
+	object.server = string2server(server);
 
-	return {resource, stoll(size), string2server(server)};
+	return in;
+
+}
+
+//writes a single line to a file
+std::ostream& operator <<(std::ostream &out, const FetchedObject &object){
+
+	return out << server2string(object.server) << " " << object.resource << " " << object.size << std::endl;
 
 }

@@ -7,10 +7,10 @@
 //Prints the program's usage to the specified ostream.
 void usage(std::ostream &out, const char *name){
 
-	out << "Usage: " << name << " $infile $epa_bw $epa_cd $clark_bw $clark_cd $wb $wf $cache_size" 	<< std::endl;
-	out << "   where $epa_bw, $epa_cd, $clark_bw, $clark_cd, $cache_size are positive integers," 	<< std::endl;
-	out << "   and $infile is the name of the file to read from," 									<< std::endl;
-	out << "   and $wb, $wf are floating point numbers." 											<< std::endl;
+	out << "Usage: " << name << " $infile $epa_bw $epa_cd $clark_bw $clark_cd $wb $wf $cache_size" << std::endl;
+	out << "   where $epa_bw, $epa_cd, $clark_bw, $clark_cd, $cache_size are positive integers,"   << std::endl;
+	out << "   and $infile is the name of the file to read from," 									        << std::endl;
+	out << "   and $wb, $wf are floating point numbers." 														  << std::endl;
 
 }
 
@@ -84,14 +84,14 @@ int main(const int argc, const char *argv[]){
 
 	const double hitRatio = results.cacheHits / static_cast<double>(results.cacheHits + results.cacheMisses);
 
-	std::cout << "Finished. Results: " 					<< std::endl;
-	std::cout << "Cache hits:                         " << results.cacheHits 				<< std::endl;
+	std::cout << "Finished. Results: " 					    << std::endl;
+	std::cout << "Cache hits:                         " << results.cacheHits 				   << std::endl;
 	std::cout << "Cache misses:                       " << results.cacheMisses 				<< std::endl;
-	std::cout << "Hit ratio:                          " << hitRatio 						<< std::endl;
+	std::cout << "Hit ratio:                          " << hitRatio 						      << std::endl;
 	std::cout << "Replacement algorithm called:       " << results.replacementPolicyCalls 	<< std::endl;
 	std::cout << "Largest number of objects replaced: " << results.maxObjectsReplaced 		<< std::endl;
-	std::cout << "Lowest UV recorded:                 " << results.lowestUV 				<< std::endl;
-	std::cout << "Highest UV recorded:                " << results.highestUV 				<< std::endl;
+	std::cout << "Lowest UV recorded:                 " << results.lowestUV 				   << std::endl;
+	std::cout << "Highest UV recorded:                " << results.highestUV 				   << std::endl;
 
 	return 0;
 

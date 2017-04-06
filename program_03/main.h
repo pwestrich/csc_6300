@@ -25,8 +25,8 @@ struct SimulationResults {
 	int64_t cacheMisses;
 	int64_t replacementPolicyCalls;
 	int64_t maxObjectsReplaced;
-	int64_t lowestUV;
-	int64_t highestUV;
+	double lowestUV;
+	double highestUV;
 
 };
 

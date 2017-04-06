@@ -23,6 +23,8 @@ struct FetchedObject {
 
 std::string server2string(const Server server);
 Server string2server(const std::string &server);
-FetchedObject readFromFile(std::ifstream &in);
+
+std::istream& operator >>(std::istream &in, FetchedObject &object);
+std::ostream& operator <<(std::ostream &out, const FetchedObject &object);
 
 #endif
