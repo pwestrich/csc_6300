@@ -21,23 +21,8 @@ struct FetchedObject {
 
 };
 
-std::string server2string(const Server server){
-
-	switch(server){
-
-		case ServerClark: return "Clark",
-		case ServerEPA	: return "EPA",
-		default			: return "none"
-
-	}
-
-}
-
-//Reads a single line from the specified istream and makes an object from it
-FetchedObject readFromFile(std::istream &in){
-
-	return {server2string(ServerNone), 0, ServerNone};
-
-}
+std::string server2string(const Server server);
+Server string2server(const std::string &server);
+FetchedObject readFromFile(std::ifstream &in);
 
 #endif

@@ -25,7 +25,7 @@ SOURCE := $(wildcard *.cpp)
 OBJECT := $(patsubst %.cpp,%.o,$(wildcard *.cpp))
 
 #arguments to the binary for make run
-INFILE		:= all.txt
+INFILE		:= 10.txt
 EPA_BW 		:= 1
 EPA_CD		:= 80
 CLARK_BW	:= 1
@@ -51,9 +51,17 @@ $(TARGET): $(OBJECT)
 
 	$(LINK) $(TARGET) $(OBJECT) $(LIBS)
 
-main.o: main.cpp main.h
+main.o: main.cpp main.h hybrid_cache.h
 
 	$(COMPILE) main.cpp
+
+hybrid_cache.o: hybrid_cache.cpp hybrid_cache.h object.h
+
+	$(COMPILE) hybrid_cache.cpp
+
+object.o: object.cpp object.h
+
+	$(COMPILE) object.cpp
 
 #generic rule for anything missed
 %.o: %.cpp %.h

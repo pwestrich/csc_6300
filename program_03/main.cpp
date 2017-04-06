@@ -26,7 +26,7 @@ int main(const int argc, const char *argv[]){
 	}
 
 	//parse arguments
-	const ProgramArguments args = {
+	ProgramArguments args = {
 
 		std::ifstream(argv[1]),
 		atoll(argv[2]),

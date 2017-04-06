@@ -44,15 +44,15 @@ public:
 
 	//Gets an object from the cache.
 	//Returns true if it was found, false elsewise
-	bool getObject(FetchedObject object);
+	bool getObject(const FetchedObject &object);
 
 	//Attempts to add on object to the cache
 	//Returns true if it was, false otherwise
-	bool addToCache(FetchedObject object);
+	bool addToCache(const FetchedObject &object);
 
 };
 
 //Runs the simulation with the given arguments.
-SimulationResults simulateHybridCache(const ProgramArguments &args);
+SimulationResults simulateHybridCache(ProgramArguments &args);
 
 #endif
