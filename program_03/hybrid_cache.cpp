@@ -1,5 +1,6 @@
 
 #include <algorithm>
+#include <cassert>
 #include <cmath>
 #include <iostream>
 
@@ -9,6 +10,7 @@
 
 void HybridCache::calculateUV(CachedObject &object){
 
+	//crunch the numbers for the right server
 	if (object.object.server == ServerClark){
 	
 		object.uv = ((args.clark_cd + (args.wb / args.clark_bw)) * pow(object.hits + 1, args.wf)) / object.object.size;
@@ -19,6 +21,7 @@ void HybridCache::calculateUV(CachedObject &object){
 
 	}
 
+	//keep track of the lowest and highest we calculate
 	if (object.uv < lowestUV){
 
 		lowestUV = object.uv;
@@ -45,22 +48,28 @@ void HybridCache::replaceObjects(const CachedObject &object){
 
 	std::vector<size_t> freeList;
 
-	while ((sizeFreed < sizeNeeded) &&(index >= 0)){
+	while ((sizeFreed < sizeNeeded) && (index >= 0)){
 
 		//only replace objects of a lower UV
 		if (cache[sortedCache[index]].uv < object.uv){
 
 			sizeFreed += cache[sortedCache[index]].object.size;
 			freeList.push_back(sortedCache[index]);
+			index -= 1;
 
 		} else break; //when we hit this, there are no more objects of lower UV
-
-		index -= 1;
 
 	}
 
 	//make sure we're about to free enough space.
 	if (sizeFreed >= sizeNeeded){
+
+		//keep track of how many items we trashed
+		if (freeList.size() > largestObjectsReplaced){
+
+			largestObjectsReplaced = freeList.size();
+
+		}
 
 		//free the items in the free list from the sorted list, map, and cache
 		sortedCache.erase(sortedCache.end() - freeList.size(), sortedCache.end());
@@ -75,13 +84,6 @@ void HybridCache::replaceObjects(const CachedObject &object){
 		//adjust cache size and add this to the list
 		currentCacheSize -= sizeFreed;
 		_addToCache(object);
-
-		//keep track of how many items we trashed
-		if (freeList.size() > largestObjectsReplaced){
-
-			largestObjectsReplaced = freeList.size();
-
-		}
 
 	}
 
@@ -102,6 +104,11 @@ void HybridCache::_addToCache(const CachedObject &object){
 		return this->cache[left] > this->cache[right];
 
 	});
+
+	assert(currentCacheSize <= args.cache_size);
+	assert(currentCacheSize >= 0);
+	assert(cache.size() == sortedCache.size());
+	assert(cache.size() == cacheMap.size());
 
 }
 
@@ -142,7 +149,6 @@ void HybridCache::addToCache(const FetchedObject &object){
 	if (newSize <= args.cache_size){
 
 		//object fits in cache, simply add it
-		
 		_addToCache(cached);
 
 	} else {
