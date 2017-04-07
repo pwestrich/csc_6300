@@ -1,6 +1,5 @@
 
 #Latex stuff
-
 *.aux
 *.fdb_latexmk
 *.fls
@@ -10,3 +9,9 @@
 *.synctex.gz
 *.bbl
 *.blg
+
+#C++ stuff
+*.o
+*.dYSM
+program3
+
