@@ -40,7 +40,27 @@
 
 \section{Introduction}
 
-Text goes here.
+For years, the gap in performance between processors and persistent storage has continually widened. Disk latency for 
+traditional hard disk drives (HDDs) has improved by approximately ten percent per year, while we are just now beginning 
+to see the end of Moore's Law for processors. \cite{Xie2011}
+
+Traditional HDDs rely on mechanical parts, and therefore are destined to fail eventually, take relative eons to read 
+or write data, and are prone to multiuple methods of failure, such as sudden force, vibration, or simply mechanical 
+failure. They also are power inefficent and generate pleny of heat. \cite{Xie2011}
+
+With the introduction of solid state drives (SSDs), we can begin to address many of the aforementioned issues, as they 
+are not susceptible to the same problems. SSDs are lighter, faster, more energy efficient, and resistant to blunt force.
+\cite{Xie2011} 
+
+However, they are not completely free from issue. At the time of writing, SSDs are still much more expensive per gigabyte 
+than their HDD counterparts, though they promise to reach equivalence within a few years. They also have much different 
+performance characteristics than HDDs, most notably, usually being worse at small random writes. They also tand to become 
+slower as they fill up, and have a limited number of read/write/erase cycles they can endure before failing. 
+\cite{Xie2011, Dumitru2007}
+
+Overall, SSDs are better than their predecessor, and will most likely come to replace them in the coming years. Therefore, 
+applications that are heavily reliant on their storage medium, such as databases, must come prepared for it. In this paper, 
+we will explore what effects these performance differences have as well as the solutions that have been proposed.
 
 \section{Overview of SSDs}
 
