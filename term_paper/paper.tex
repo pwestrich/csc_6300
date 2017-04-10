@@ -54,7 +54,7 @@ are not susceptible to the same problems. SSDs are lighter, faster, more energy 
 
 However, they are not completely free from issue. At the time of writing, SSDs are still much more expensive per gigabyte 
 than their HDD counterparts, though they promise to reach equivalence within a few years. They also have much different 
-performance characteristics than HDDs, most notably, usually being worse at small random writes. They also tand to become 
+performance characteristics than HDDs, most notably, usually being worse at small random writes. They also tend to become 
 slower as they fill up, and have a limited number of read/write/erase cycles they can endure before failing. 
 \cite{Xie2011, Dumitru2007}
 
@@ -62,9 +62,40 @@ Overall, SSDs are better than their predecessor, and will most likely come to re
 applications that are heavily reliant on their storage medium, such as databases, must come prepared for it. In this paper, 
 we will explore what effects these performance differences have as well as the solutions that have been proposed.
 
-\section{Overview of SSDs}
+\section{Overview of solid state drives}
 
-Text goes here.
+Though solid state drives are designed to emulate the behavior of previous block devices, under the hood, they operate 
+quite differently. \cite{Lee2008, Cornwell2012, Micheloni2013, MatejFucek2014} In this section, we explain the general 
+architecture of a solid state drive and explain these differences.
+
+Solid state drives consist of three major components: an array of non-volatile flash memory, a host interface, and a 
+microcontroller that bridges the gap between the two. 
+
+\subsection{NAND flash}
+
+Most SSDs today use a type of electrically erasable programmable read-only memory (EEPROM) known as NAND flash memory. 
+NAND is an abbreviation for 'not-and', a type of logic gate. These NAND cells are arranged into a grid pattern. These 
+cells can only be accessed in certain patterns dependent on the particular drive's arrangement of those cells. 
+\cite{Cornwell2012, Micheloni2013}
+
+Several of these grids, usually one to four, are placed together into what is known as a die. Each die can read somewhere 
+around 400 MB/sec, while they can only write at around 20MB/sec. This is due to the much more complicated write method 
+they employ. However, they have much lower latencies for these operations, typically measured in microseconds, and in 
+order to meet capacity and speed requirements, multiple dies are packaged inside one SSD. \cite{Cornwell2012, Micheloni2013}
+
+SSDs use a write-verify method to program, or write to, the cells. In this procedure, the cells are first erased, then 
+a high voltage signal is applied to them until they reach the appropriate value. As the cells hold more bits, this 
+process gets more difficult and slows down, as the voltages applied to the cells must become more fine-grained and precise.
+\cite{Cornwell2012, Micheloni2013}
+
+\subsection{SSD controller}
+
+The controller's job is twofold. First, it must translate the operations requested by the host machine into operations 
+that be performed on the NAND flash. Second, it must do this in a manner such that wear on the device is minimized and 
+even, and the time needed to perform the requested operations is minimized. 
+
+To carry out these tasks, SSDs have a small computer, known as a microcontroller. The microcontroller is also paired with 
+specialized hardware to speed up its computations. 
 
 \section{Effects on database systems}
 
