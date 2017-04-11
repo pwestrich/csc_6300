@@ -56,7 +56,7 @@ However, they are not completely free from issue. At the time of writing, SSDs a
 than their HDD counterparts, though they promise to reach equivalence within a few years. They also have much different 
 performance characteristics than HDDs, most notably, usually being worse at small random writes. They also tend to become 
 slower as they fill up, and have a limited number of read/write/erase cycles they can endure before failing. 
-\cite{Xie2011, Dumitru2007}
+\cite{Dumitru2007, Dirik2009, Xie2011}
 
 Overall, SSDs are better than their predecessor, and will most likely come to replace them in the coming years. Therefore, 
 applications that are heavily reliant on their storage medium, such as databases, must come prepared for it. In this paper, 
@@ -65,8 +65,8 @@ we will explore what effects these performance differences have as well as the s
 \section{Overview of solid state drives}
 
 Though solid state drives are designed to emulate the behavior of previous block devices, under the hood, they operate 
-quite differently. \cite{Lee2008, Cornwell2012, Micheloni2013, MatejFucek2014} In this section, we explain the general 
-architecture of a solid state drive and explain these differences.
+quite differently. \cite{Lee2008, Dirik2009, Cornwell2012, Micheloni2013, MatejFucek2014, Chen2016} In this section, we 
+explain the general architecture of a solid state drive and explain these differences.
 
 Solid state drives consist of three major components: an array of non-volatile flash memory, a host interface, and a 
 microcontroller that bridges the gap between the two. 
@@ -76,51 +76,52 @@ microcontroller that bridges the gap between the two.
 Most SSDs today use a type of electrically erasable programmable read-only memory (EEPROM) known as NAND flash memory. 
 NAND is an abbreviation for 'not-and', a type of logic gate. These NAND cells are arranged into a grid pattern. These 
 cells can only be accessed in certain patterns dependent on the particular drive's arrangement of those cells. 
-\cite{Cornwell2012, Micheloni2013}
+\cite{Dirik2009, Cornwell2012, Micheloni2013, Chen2016}
 
 Several of these grids, usually one to four, are placed together into what is known as a die. Each die can read somewhere 
 around 400 MB/sec, while they can only write at around 20MB/sec. This is due to the much more complicated write method 
 they employ. However, they have a much lower latency for these operations, typically measured in microseconds, and in 
 order to meet capacity and speed requirements, multiple dies are packaged inside one SSD. The controller will often 
-read and write to multiple dies at once in order to reach performance goals. \cite{Cornwell2012, Micheloni2013}
+read and write to multiple dies at once in order to reach performance goals. 
+\cite{Dirik2009, Cornwell2012, Micheloni2013, Chen2016}
 
 SSDs use a write-verify method to program, or write to, the cells. In this procedure, the cells are first erased, then 
 a high voltage signal is applied to them until they reach the appropriate value. As the cells hold more bits, this 
 process gets more difficult and slows down, as the voltages applied to the cells must become more fine-grained and precise.
-\cite{Cornwell2012, Micheloni2013}
+\cite{Dirik2009, Cornwell2012, Micheloni2013, Chen2016}
 
 \subsection{SSD controller}
 
 The controller has many jobs. First, it must present to the host device the same interface HDDs do. Second, it must 
 translate the commands issued to it to operations on the NAND flash. Third, it must wear the NAND in the drive evenly 
 to prevent premature failure. Fourth, it must deal with the higher error rate that the NAND flash has over HDDs. 
-\cite{Cornwell2012, Micheloni2013, MatejFucek2014}
+\cite{Dirik2009, Cornwell2012, Micheloni2013, MatejFucek2014, Chen2016}
 
 To carry out these tasks, SSDs have a small computer, known as a microcontroller, embedded within them. The microcontroller 
 is also paired with specialized hardware to speed up some of its computations, as well as some amount of DRAM to cache and 
-buffer events. \cite{Cornwell2012, Micheloni2013, MatejFucek2014}
+buffer events. \cite{Dirik2009, Cornwell2012, Micheloni2013, MatejFucek2014, Chen2016}
 
 The controller must present to the host device the same interface other block devices do. However, the NAND flash is not 
 accessed in the same way; instead, it has its own filesystem it maintains, known as the flash translation layer, or FTL. 
 The FTL is used to perform the translation from the logical blocks the host requests to the pages and blocks within the 
-NAND flash. \cite{Cornwell2012, Micheloni2013, MatejFucek2014}
+NAND flash. \cite{Cornwell2012, Micheloni2013, MatejFucek2014, Chen2016}
 
 Because cells must be erased before they can be written to, new data is always written to known empty pages, and the old 
 pages are marked as garbage in the FTL. Therefore, the actual locations of data may move across the drive as it is written 
 to, unlike HDDs. The FTL must maintain a list of empty, written, and garbage pages, and keep track of the mapping from 
 the logical blocks requested by the host and their actual location on the SSD. The FTL also maintains the number of writes 
 a block has experienced as well as a list of bad blocks that have either started out defective from the factory, or have 
-worn out over time. \cite{Cornwell2012, Micheloni2013, MatejFucek2014}
+worn out over time. \cite{Dirik2009, Cornwell2012, Micheloni2013, MatejFucek2014, Chen2016}
 
 When the controller is idle for some period of time, it will start performing garbage collection on the now invalid pages 
 in order to free up more space. Some SSDs, especially earlier ones, would degrade in performance as the drive filled up 
 and it ran out of free pages. The drive then had to immediately garbage collect to free up more, causing a delay in writes. 
 Modern SSDs will understate their capacity to the host system, that way there are always free pages on the disk. 
-\cite{Cornwell2012, Micheloni2013, MatejFucek2014}
+\cite{Dirik2009, Cornwell2012, Micheloni2013, MatejFucek2014, Chen2016}
 
 NAND flash has a much higher error rate than the magnetic platters of HDDs. Therefore, all SSDs have some amount of 
 hardware-assisted error correction. Higher quality drives have more dedicated hardware, while cheaper ones may share 
-hardware for a larger number of pages. \cite{Cornwell2012, Micheloni2013, MatejFucek2014}
+hardware for a larger number of pages. \cite{Dirik2009, Cornwell2012, Micheloni2013, MatejFucek2014, Chen2016}
 
 \section{Effects on database systems}
 
@@ -164,10 +165,51 @@ possible. \cite{Cornwell2012, Micheloni2013, MatejFucek2014}
 
 \subsection{What this means for databases}
 
-With the direction that computing is headed, data is invaluable. The databases in which this data is stored are completely 
-dependent on the storage medium in which they are backed. 
+With the direction that computing is headed, data is invaluable. Data-heavy applications, such as those that heavily use 
+online transaction processing (OLTP), require a data store that provides high performance and reliability.  The databases 
+in which this data is stored are completely dependent on the storage medium in which they are backed. Its characteristics 
+can seriously affect the end performance of the system. \cite{Lee2009, Xie2011, Micheloni2013, MatejFucek2014, Chen2016}
+
+OLTP systems often require many small, random writes, which are the one thing that SSDs are terrible at. A small write 
+requires rewriting the entire page with its changes to a separate location in the drive, then erasing the previous one, 
+which is a costly operation. Many of these mall writes performed close together may lead to the SSD running out of free 
+pages to write to, which would degrade performance tremendously. \cite{Cornwell2012, Micheloni2013, MatejFucek2014, Chen2016}
+
+Other systems that have a more read-heavy workload will improve greatly with the introduction of SSDs, especially as the 
+randomness of those reads increases. Their only worry would then be the higher cost of large storage, which promises to 
+eventually fall to the price of current HDDs. \cite{Chen2016}
 
 \section{Solutions to these effects}
+
+Some have already explored replacing HDDs with SSDs in the enterprise space, and have proposed some solutions to the 
+problems that they introduce. In this section, we explain these solutions.
+
+\subsection{Hardware improvements}
+
+SSD manufacturers have made numerous advantage on their end to help mitigate what they are bad at. There are several 
+places apt for improvement, such as the FTL, or simply the amount of hardware included in the device. The more efficient 
+the FTL is at translating and ordering requests and the more hardware that allows for increased parallelism, the more 
+performance will come from the device. \cite{Xie2011, Chen2016}
+
+Many SSDs share hardware for both error correction and the write-verify cycle. Enterprise-grade devices tend to have 
+less hardware sharing, increasing the amount of parallelism; areas of the drive will not have to wait in line to use 
+the shared hardware. \cite{Dirik2009, Cornwell2012, Micheloni2013, MatejFucek2014, Chen2016}
+
+An improved interface for the device will also increase SSD performance. Currently, SSDs use the same interface that 
+HDDs have employed, serial advanced technology attachment generation 3 (SATA-3), which is limited to somewhere around
+600 MB/sec of thourughput. While that may be sufficent for HDDs, SSDs can easily outpace that. \cite{Micheloni2013}
+
+Fortunately, there are faster interfaces present on modern day systems. The peripheral component interconnect express 
+(PCIe) interface is used in all modern-day systems to connect important devices together. In fact, the SATA controller 
+is often itself a PCIe device. PCIe promises transfer speeds anywhere from two to eight times that of SATA dependent on 
+the number of lanes dedicated to the device. It also supports duplex and device-to-device communication, eliminating 
+overhead. \cite{Micheloni2013}
+
+Moving SSDs to PCIe would allow for much higher throughput, lower latency, and simplification of the FTL; it would no 
+longer need to emulate a traditional block device. Other PCIe devices could also directly interact with the SSD to move 
+data, reducing communication overhead with the CPU. \cite{Micheloni2013}
+
+\subsection{Software improvements}
 
 Text goes here.
 
