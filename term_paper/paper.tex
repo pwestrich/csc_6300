@@ -17,7 +17,7 @@
 % Document starts
 \begin{document}
 % Title portion. Note the short title for running heads 
-\title[Short Title]{Effects of Solid State Drives on Database Performance}  
+\title[Effects of SSDs on Databases]{Effects of Solid State Drives on Database Performance}  
 \author{Philip M. Westrich}
 \affiliation{
   \institution{Tennessee Technological University}
@@ -80,8 +80,9 @@ cells can only be accessed in certain patterns dependent on the particular drive
 
 Several of these grids, usually one to four, are placed together into what is known as a die. Each die can read somewhere 
 around 400 MB/sec, while they can only write at around 20MB/sec. This is due to the much more complicated write method 
-they employ. However, they have much lower latencies for these operations, typically measured in microseconds, and in 
-order to meet capacity and speed requirements, multiple dies are packaged inside one SSD. \cite{Cornwell2012, Micheloni2013}
+they employ. However, they have a much lower latency for these operations, typically measured in microseconds, and in 
+order to meet capacity and speed requirements, multiple dies are packaged inside one SSD. The controller will often 
+read and write to multiple dies at once in order to reach performance goals. \cite{Cornwell2012, Micheloni2013}
 
 SSDs use a write-verify method to program, or write to, the cells. In this procedure, the cells are first erased, then 
 a high voltage signal is applied to them until they reach the appropriate value. As the cells hold more bits, this 
@@ -90,16 +91,81 @@ process gets more difficult and slows down, as the voltages applied to the cells
 
 \subsection{SSD controller}
 
-The controller's job is twofold. First, it must translate the operations requested by the host machine into operations 
-that be performed on the NAND flash. Second, it must do this in a manner such that wear on the device is minimized and 
-even, and the time needed to perform the requested operations is minimized. 
+The controller has many jobs. First, it must present to the host device the same interface HDDs do. Second, it must 
+translate the commands issued to it to operations on the NAND flash. Third, it must wear the NAND in the drive evenly 
+to prevent premature failure. Fourth, it must deal with the higher error rate that the NAND flash has over HDDs. 
+\cite{Cornwell2012, Micheloni2013, MatejFucek2014}
 
-To carry out these tasks, SSDs have a small computer, known as a microcontroller. The microcontroller is also paired with 
-specialized hardware to speed up its computations. 
+To carry out these tasks, SSDs have a small computer, known as a microcontroller, embedded within them. The microcontroller 
+is also paired with specialized hardware to speed up some of its computations, as well as some amount of DRAM to cache and 
+buffer events. \cite{Cornwell2012, Micheloni2013, MatejFucek2014}
+
+The controller must present to the host device the same interface other block devices do. However, the NAND flash is not 
+accessed in the same way; instead, it has its own filesystem it maintains, known as the flash translation layer, or FTL. 
+The FTL is used to perform the translation from the logical blocks the host requests to the pages and blocks within the 
+NAND flash. \cite{Cornwell2012, Micheloni2013, MatejFucek2014}
+
+Because cells must be erased before they can be written to, new data is always written to known empty pages, and the old 
+pages are marked as garbage in the FTL. Therefore, the actual locations of data may move across the drive as it is written 
+to, unlike HDDs. The FTL must maintain a list of empty, written, and garbage pages, and keep track of the mapping from 
+the logical blocks requested by the host and their actual location on the SSD. The FTL also maintains the number of writes 
+a block has experienced as well as a list of bad blocks that have either started out defective from the factory, or have 
+worn out over time. \cite{Cornwell2012, Micheloni2013, MatejFucek2014}
+
+When the controller is idle for some period of time, it will start performing garbage collection on the now invalid pages 
+in order to free up more space. Some SSDs, especially earlier ones, would degrade in performance as the drive filled up 
+and it ran out of free pages. The drive then had to immediately garbage collect to free up more, causing a delay in writes. 
+Modern SSDs will understate their capacity to the host system, that way there are always free pages on the disk. 
+\cite{Cornwell2012, Micheloni2013, MatejFucek2014}
+
+NAND flash has a much higher error rate than the magnetic platters of HDDs. Therefore, all SSDs have some amount of 
+hardware-assisted error correction. Higher quality drives have more dedicated hardware, while cheaper ones may share 
+hardware for a larger number of pages. \cite{Cornwell2012, Micheloni2013, MatejFucek2014}
 
 \section{Effects on database systems}
 
-Text goes here.
+For years, systems have assumed that HDDs are the form of persistent storage used, and are optimized for it. These 
+optimizations often are detrimental to SSD performance. In this section, we explain these assumptions and why they 
+may lead to suboptimal performance.
+
+\subsection{Physical differences}
+
+HDDs have multiple moving parts: the platters that spin at some speed, and the heads that move across them that read the 
+data from the platters. It takes time to move these parts through space. Often, to conserve power and lifespan, the drive 
+stops rotating its platters. When at a complete stop, it can take between four to ten seconds to bring the platters back 
+up to speed. This may not be an issue in consumer-grade applications, but it can be a matter of life and death in critical
+real-time systems. \cite{MatejFucek2014} The head of the drive must also move to the correct location to read from the 
+requested sector. \cite{Cornwell2012}
+
+Solid state drives have zero moving parts, hence their name. They do not require any spin up time, and their seek time is 
+both uniform and much, much smaller. An additional benefit is that they consume much less energy. 
+\cite{Cornwell2012, Micheloni2013, MatejFucek2014}
+
+\subsection{Differences in access patterns}
+
+Current systems tend to assume that they will be placing their data on to HDDs, and tend to optimize for that; they try 
+to make up for the shortcomings of the physical media. They assume the location of the sectors requested are always in 
+the same location, and that lower addresses are towards the faster, outside of the drive, and higher addresses are towards 
+the inside. \cite{Cornwell2012}
+
+Because of the seek time added by moving the head across the drive and the assumption of block locations, filesystem drivers 
+will perform complicated math to determine how it can move the head the minimum distance for a sequence of reads and writes. 
+They will also perform \textit{I/O coalescing,} or merging many smaller requests into one larger one, since HDDs are much 
+better at large sequential operations. \cite{Cornwell2012}
+
+In order to minimize the number of requests made to the drive, filesystem drivers will typically not inform the drive that 
+blocks are freed; they simply mark in their own data structures that the blocks are not needed, and the data remains on 
+the disk until something comes to overwrite it. \cite{Cornwell2012}
+
+SSDs break many of these assumptions. Because the FTL takes the liberty of shuffling data around on the disk as it sees 
+fit, I/O coalescing and other location assumptions are meaningless, and the time and effort put in to them are wasted. 
+Not informing the drive of freed blocks harms the performance of SSDs, as they rely on having as many free pages as 
+possible. \cite{Cornwell2012, Micheloni2013, MatejFucek2014}
+
+\subsection{What this means for databases}
+
+With the direction that computing is headed, data is invaluable. The databases in which this data is stored are completely 
+dependent on the storage medium in which they are backed. 
 
 \section{Solutions to these effects}
 
