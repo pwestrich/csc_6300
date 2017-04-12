@@ -211,11 +211,25 @@ data, reducing communication overhead with the CPU. \cite{Micheloni2013}
 
 \subsection{Software improvements}
 
-Text goes here.
+There are also a number of software improvements that can be made to take advantage of what flash-based storage is good 
+at and helping to mitigate what they are bad at, much like what current filesystem drivers have done with magnetic media.
+
+Operating systems file drivers will need to become aware of flash-based media. We have seen this recently, for example, 
+with Apple's introduction of the Apple File System (APFS). It promises to bring with it a number improvements, most notably
+in the case of this papaer, being optimized to work with flash-based storage. \cite{AppleComputer2017}
+
+Systems that are data-heavy will need to attempt to optimize their access patterns for SSDs rather than HDDs. 
 
 \section{Conclusions}
 
-Text goes here.
+Overall, solid state drives are a huge performance improvement over rotational magnetic media. They help greatly in closing 
+the performance gap between processors and storage that we have seen widen in the last several decades. It will only be a 
+matter of time before SSDs reach the same data density and cost per gigabyte of HDDs. \cite{Chen2016}
+
+However, SSDs introduce new problems in applications due to the vastly different behaviors that they exhibit. Both software 
+and hardware will need to start accommodating for these differences in order to reduce bottlenecks in data-intensive 
+applications, such as database management systems. We have already seen this with the works in \cite{AppleComputer2017}, 
+and more is sure to come.
 
 \bibliographystyle{ACM-Reference-Format}
 \bibliography{bibliography}
